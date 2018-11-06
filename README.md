@@ -8,56 +8,30 @@ We'll talk about building up a system to have confidence in the building and dep
 
 ----
 
-## Stage 2
+## Stage 3
 
-Limes as a service
+Limes as a service, in containers
 
 ### Last time on cloud limes
 
-In Stage 1, we ran `redis` in a docker container, connected to it with `redis-ci` and proved we could increment limes. 
+In Stage 2, we created a little Javascript server to interact with limes.
 
-### What's next
+In order to run this, we needed to get a Docker container for `redis` going, then sort out running a Node app.
 
-What I really want though, is a cloud lime service. I want to count limes without having to know about how `redis` works; it's just a service in a box after all.
+### Put a container on it
 
-### Let's reach for friend Javascript
+Let's containerise the Node app, and use Docker Compose to have it easily bought up and down next to the `redis` service.
 
-And develop a small service that sits next to `redis` and lets us count limes. 
+### Ahoy there
 
-Let's work on a `REST` service because `PUT` limes in the cloud and then `GET` to know how many limes there are.
+I'm using [ahoy](https://github.com/ahoy-cli/ahoy) to easily run commands.
 
-### A little help from Express
+You may want to get this if you're trying to follow along at home, otherwise the commands are all in `.ahoy.yml` in reasonably readable formatting.
 
-Now we have a simple service
+### What we have now
 
-```
-GET /limes
-{limes: "0"}
-```
-```
-PUT /limes
-{limes: 1}
-```
-```
-DELETE /limes
-{limes: 0}
-```
-```
-POST /limes
-Cannot POST /limes/
-```
+Now, to run the lime service, we need to first build the Node app into a container tagged `limes:local` and then run 
 
-### Getting it to work
+```docker-compose up -d```
 
-With this, we've had to change our `docker run` slightly, so the locally hosted server gets to talk to redis;
-
-```docker run -p 6379:6379 -d redis:latest```
-
-### What we've done
-
-Now we can interact with limes via a REST service.
-
-Next step, put the REST service in a container, next to the `redis` container. 
-
-
-
+to fully upload to the containerised lime zone. 

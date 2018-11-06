@@ -1,0 +1,23 @@
+ahoyapi: v2
+
+commands:
+  build:
+    usage: Build the local lime app
+    cmd: |
+      cd app
+      docker build . -t lime:local
+
+  up:
+    usage: Bring up the limes
+    cmd: |
+      docker-compose up -d
+
+  down:
+    usage: Bring down the limes
+    cmd: |
+      docker-compose down
+
+  limes:
+    usage: HTTP VERB a lime
+    cmd: |
+      curl -X $1 localhost:1337/limes/ -w "\n"
