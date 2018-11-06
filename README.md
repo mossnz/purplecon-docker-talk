@@ -8,53 +8,23 @@ We'll talk about building up a system to have confidence in the building and dep
 
 ----
 
-## Stage 1
+## Stage 2
 
-Technical exploration of using Docker.
+Limes as a service
 
-### Problem we're trying to solve
+### Last time on cloud limes
 
-On the purplecon.nz website, you can have limes.
+In Stage 1, we ran `redis` in a docker container, connected to it with `redis-ci` and proved we could increment limes. 
 
-These limes are stored locally as a cookie ... lime cookies sound weird, but anyway ... so it's really easy to get
+### What's next
 
-```you have 1337 limes. definitely hax but okay```
+What I really want though, is a cloud lime service. I want to count limes without having to know about how `redis` works; it's just a service in a box after all.
 
-What if instead of locally, we uploaded the limes to the cloud?
+### Let's reach for friend Javascript
 
-### Okay, so it's a toy problem but sure
+And develop a small service that sits next to `redis` and lets us count limes. 
 
-After some incredibly brief research, I found that `redis` has a neast `incr` command, so we can go to `try.redis.io` and type `incr limes` until we have as many cloud limes as we want, and `get limes` to found out how many limes that is.
+Let's work on a `REST` service because `PUT` limes in the cloud and then `GET` to know how many limes there are.
 
-### Let's put those limes in a container
 
-So after finding that `redis` conveniently fits our entirely made up problem, let's see how we can then fit the talk title by using containers.
-
-`https://hub.docker.com/_/redis/` says I can run redis as a container by typing 
-
-```$ docker run --name some-redis -d redis:latest```
-
-into friend computer ... which starts a thing that does nothing immediately obviously useful.
-
-Further down the page, there's 
-
-```$ docker run -it --link some-redis:redis --rm redis redis-cli -h redis -p 6379```
-
-Which brings up a redis cli and now we're cooking with limes.
-
-```
-redis:6379> incr limes
-(integer) 1
-redis:6379> incr limes
-(integer) 2
-redis:6379> 
-```
-
-### What we've done
-
-We've successfully proved that we can use `redis` in `docker` to count limes.
-
-### What we haven't done yet
-
-Friend computer just downloaded and executed code off the internet. It was fast and easy, but can we trust that?
 
