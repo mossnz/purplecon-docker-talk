@@ -22,6 +22,15 @@ In order to run this, we needed to get a Docker container for `redis` going, the
 
 Let's containerise the Node app, and use Docker Compose to have it easily bought up and down next to the `redis` service.
 
+To do this, we've added two configuration files,
+
+- `Dockerfile` in `/app`
+- `docker-compose.yml` 
+
+The Docker file specifies how to build the Node App
+
+And Docker Compose glues the two containers we need together.
+
 ### Ahoy there
 
 I'm using [ahoy](https://github.com/ahoy-cli/ahoy) to easily run commands.
