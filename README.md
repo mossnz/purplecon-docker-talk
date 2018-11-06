@@ -8,4 +8,13 @@ We'll talk about building up a system to have confidence in the building and dep
 
 ----
 
-This repository will contain examples and working towards the goals of the talk.
+This repository is split into different branches that show working along the way;
+
+### Stage 1
+
+A technical investigation of a problem (counting limes), and if Redis would fulfill the purpose.
+
+### Stage 2
+
+Writing some Javascript to be a REST based service to count limes
+
