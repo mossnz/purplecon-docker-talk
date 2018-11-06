@@ -18,3 +18,6 @@ A technical investigation of a problem (counting limes), and if Redis would fulf
 
 Writing some Javascript to be a REST based service to count limes
 
+### Stage 3
+
+Putting the REST based service into containers, with Docker Compose.
