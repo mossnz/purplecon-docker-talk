@@ -26,5 +26,38 @@ And develop a small service that sits next to `redis` and lets us count limes.
 
 Let's work on a `REST` service because `PUT` limes in the cloud and then `GET` to know how many limes there are.
 
+### A little help from Express
+
+Now we have a simple service
+
+```
+GET /limes
+{limes: "0"}
+```
+```
+PUT /limes
+{limes: 1}
+```
+```
+DELETE /limes
+{limes: 0}
+```
+```
+POST /limes
+Cannot POST /limes/
+```
+
+### Getting it to work
+
+With this, we've had to change our `docker run` slightly, so the locally hosted server gets to talk to redis;
+
+```docker run -p 6379:6379 -d redis:latest```
+
+### What we've done
+
+Now we can interact with limes via a REST service.
+
+Next step, put the REST service in a container, next to the `redis` container. 
+
 
 

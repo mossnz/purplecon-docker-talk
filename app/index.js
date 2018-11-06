@@ -1,22 +1,45 @@
+const express = require('express');
 const redis = require('redis');
-const {promisify} = require('util');
 
+const app = express();
+const port = 1337;
 const client = redis.createClient();
-const getAsync = promisify(client.get).bind(client);
-const incrAsync = promisify(client.incr).bind(client);
 
-client.on("error", (err) => {
-    console.log(`Error: ${err}`);
+
+app.get('/status', (req, res) => {
+  client.ping((err, reply) => {
+    res.json({
+      server: 'PING',
+      redis: reply,
+    });
+  });
 });
 
-function moreLimes() {
-    return incrAsync('limes').then(count => `${count} limes`);
-}
+app.get('/limes', (req, res) => {
+  client.get('limes', (err, reply) => {
+    const limes = reply || 0;
+    res.json({
+      limes,
+    });
+  });
+});
 
-function countLimes() {
-    return getAsync('limes').then(count => `${count} limes.`);
-}
+app.put('/limes', (req, res) => {
+  client.incr('limes', (err, reply) => {
+    const limes = reply || 0;
+    res.json({
+      limes,
+    });
+  });
+});
 
-moreLimes().then(console.log);
-countLimes().then(console.log);
-client.quit();
+app.delete('/limes', (req, res) => {
+  client.decr('limes', (err, reply) => {
+    const limes = reply || 0;
+    res.json({
+      limes,
+    });
+  });
+});
+
+app.listen(port, () => console.log(`Limes listening on port ${port}`));
