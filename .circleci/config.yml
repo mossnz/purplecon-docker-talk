@@ -23,7 +23,7 @@ jobs:
           name: Build Limes App
           command: |
             DOCKER_TAG="date +%Y-%m-$LIMES-$CIRCLE_BUILD_NUM"
-            docker build -t mossnz/purplecon-limes:$DOCKER_TAG image/.
+            docker build -t mossnz/purplecon-limes:$DOCKER_TAG app/.
             docker save -o limes.tar mossnz/purplecon-limes:$DOCKER_TAG
       - persist_to_workspace:
           root: ~/project
