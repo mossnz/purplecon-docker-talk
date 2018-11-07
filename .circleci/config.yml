@@ -30,7 +30,7 @@ jobs:
           name: Build Limes App
           command: |
             DOCKER_TAG="`head -1 tag`"
-            docker build -t mossnz/purplecon-limes:$DOCKER_TAG app/.
+            docker build -t quay.io/mossnz/purplecon-limes:$DOCKER_TAG app/.
             docker save -o limes.tar quay.io/mossnz/purplecon-limes:$DOCKER_TAG
       - persist_to_workspace:
           root: ~/project
