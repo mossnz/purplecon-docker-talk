@@ -8,39 +8,46 @@ We'll talk about building up a system to have confidence in the building and dep
 
 ----
 
-## Stage 3
+## Stage 4
 
-Limes as a service, in containers
+Limes as a service, in the cloud
 
 ### Last time on cloud limes
 
-In Stage 2, we created a little Javascript server to interact with limes.
+In Stage 3, we put our Node app into a Docker container, so we could nicely run `docker-compose up` to bring up our limes.
 
-In order to run this, we needed to get a Docker container for `redis` going, then sort out running a Node app.
+### Let's upload that fully to the cloud zone
 
-### Put a container on it
+Which is all great fun, but so far we've been entirely working on my local machine.
 
-Let's containerise the Node app, and use Docker Compose to have it easily bought up and down next to the `redis` service.
+Let's get into some continuous integration.
 
-To do this, we've added two configuration files,
+### Please welcome CircleCI
 
-- `Dockerfile` in `/app`
-- `docker-compose.yml` 
+I quite like [CircleCI](https://circleci.com/) for creating CI pipelines;
 
-The Docker file specifies how to build the Node App
+Because everything is defined in code, and I can `git push` my way to a new and improved pipeline.
 
-And Docker Compose glues the two containers we need together.
+Several different providers offer this service; this is just me using tools I'm familiar with for this demonstration.
 
-### Ahoy there
+Ultimately any pipeline we create will be wrapping around `docker` commands.
 
-I'm using [ahoy](https://github.com/ahoy-cli/ahoy) to easily run commands.
+### Let's use quay.io
 
-You may want to get this if you're trying to follow along at home, otherwise the commands are all in `.ahoy.yml` in reasonably readable formatting.
+When you build docker containers, and want to share them with the world, a docker registry is where you want to `docker push` to.
+
+I recommend [Quay.io](https://quay.io) for this, because they incorporate [Clair](https://github.com/coreos/clair) for vulnerability scanning, so you don't have to set that up yourself.
 
 ### What we have now
 
-Now, to run the lime service, we need to first build the Node app into a container tagged `limes:local` and then run 
+One Christmas tree of me pushing commits later (see the CI History at https://circleci.com/gh/mossnz/workflows/purplecon-docker/tree/stage4)
 
-```docker-compose up -d```
+There's a Docker Image pushed up into quay.io 
 
-to fully upload to the containerised lime zone. 
+And a vulnerability scanning report of 
+
+https://quay.io/repository/mossnz/purplecon-limes/manifest/sha256:bcfcaef0062d1d85fc2c11c4766ee6de70629732c2dc3e1258b5d1dbd7cd0106?tab=vulnerabilities
+
+Which contains quite a few issues, because our image is straight up using `node:8` as a base. 
+
+Next time on cloud limes; let's look at how the CI Pipeline helps us to move forwards.
