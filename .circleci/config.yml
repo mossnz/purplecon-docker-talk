@@ -9,7 +9,8 @@ jobs:
       - run:
           name: Generate Docker tag
           command: |
-            DOCKER_TAG="`date +%Y-%m-LIMES-$CIRCLE_BUILD_NUM`"
+            FRIENDLY="`head -1 ~/checkout/app/FRIENDLY`"
+            DOCKER_TAG="`date +%Y-%m-$FRIENDLY-$CIRCLE_BUILD_NUM`"
             echo $DOCKER_TAG > ~/checkout/tag
             echo $DOCKER_TAG
       - persist_to_workspace:
