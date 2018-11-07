@@ -11,6 +11,26 @@ jobs:
           paths: 
             - app/
             - docker-compose.yml
+  build-limes:
+      docker:
+          - image: circleci/node:8.11-stretch
+      working_directory: ~/project
+      steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build Limes App
+          command: |
+            DOCKER_TAG="date +%Y-%m-$LIMES-$CIRCLE_BUILD_NUM"
+            docker build -t mossnz/purplecon-limes:$DOCKER_TAG image/.
+            docker save -o limes.tar mossnz/purplecon-limes:$DOCKER_TAG
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - limes.tar
+
+
 
 
 workflows:
