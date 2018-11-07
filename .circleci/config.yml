@@ -31,7 +31,7 @@ jobs:
           command: |
             DOCKER_TAG="`head -1 tag`"
             docker build -t mossnz/purplecon-limes:$DOCKER_TAG app/.
-            docker save -o limes.tar mossnz/purplecon-limes:$DOCKER_TAG
+            docker save -o limes.tar quay.io/mossnz/purplecon-limes:$DOCKER_TAG
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -49,9 +49,11 @@ jobs:
           command: |
             docker load -i limes.tar
       - run: 
-          name: List Docker Images
+          name: Push to Quay.io
           command: |
-            docker images
+            DOCKER_TAG="`head -1 tag`"
+            echo $QUAY_PWD | docker login -u="mossnz+circleci" --password-stdin quay.io
+            docker push quay.io/mossnz/purplecon-limes:$DOCKER_TAG
 
 workflows:
   version: 2
