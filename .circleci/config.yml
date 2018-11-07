@@ -11,3 +11,11 @@ jobs:
           paths: 
             - app/
             - docker-compose.yml
+
+
+workflows:
+  version: 2
+
+  ci_workflow:
+    jobs:
+      - checkout
