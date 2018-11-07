@@ -1,0 +1,31 @@
+{
+  "name": "purplecon-limes-as-a-service",
+  "version": "1.0.0",
+  "description": "Purplecon Limes as a Service for a talk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mossnz/purplecon-docker.git"
+  },
+  "keywords": [
+    "purplecon"
+  ],
+  "author": "Morris Nye",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mossnz/purplecon-docker/issues"
+  },
+  "homepage": "https://github.com/mossnz/purplecon-docker#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}

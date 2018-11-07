@@ -1,0 +1,74 @@
+version: 2
+jobs:
+  checkout: 
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/checkout
+    steps:
+      - checkout
+      - run:
+          name: Generate Docker tag
+          command: |
+            FRIENDLY="`head -1 ~/checkout/app/FRIENDLY`"
+            DOCKER_TAG="`date +%Y-%m-$FRIENDLY-$CIRCLE_BUILD_NUM`"
+            echo $DOCKER_TAG > ~/checkout/tag
+            echo $DOCKER_TAG
+      - persist_to_workspace:
+          root: ~/checkout
+          paths: 
+            - app/
+            - docker-compose.yml
+            - tag
+  build-limes:
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build Limes App
+          command: |
+            DOCKER_TAG="`head -1 tag`"
+            docker build -t quay.io/mossnz/purplecon-limes:$DOCKER_TAG app/.
+            docker save -o limes.tar quay.io/mossnz/purplecon-limes:$DOCKER_TAG
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - limes.tar
+  push-limes:
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run: 
+          name: Load Limes App
+          command: |
+            docker load -i limes.tar
+      - run: 
+          name: Push to Quay.io
+          command: |
+            DOCKER_TAG="`head -1 tag`"
+            echo $QUAY_PWD | docker login -u="mossnz+circleci" --password-stdin quay.io
+            docker push quay.io/mossnz/purplecon-limes:$DOCKER_TAG
+
+workflows:
+  version: 2
+
+  ci_workflow:
+    jobs:
+      - checkout
+      - build-limes:
+          requires:
+            - checkout
+      - approve-limes:
+          type: approval
+          requires:
+            - build-limes
+      - push-limes:
+          requires:
+            - approve-limes

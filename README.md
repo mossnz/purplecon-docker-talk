@@ -21,3 +21,7 @@ Writing some Javascript to be a REST based service to count limes
 ### Stage 3
 
 Putting the REST based service into containers, with Docker Compose.
+
+### Stage 4
+
+Adding a CI Pipeline and pushing Docker images to a repository.
