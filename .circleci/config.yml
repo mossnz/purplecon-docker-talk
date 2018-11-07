@@ -39,3 +39,6 @@ workflows:
   ci_workflow:
     jobs:
       - checkout
+      - build-limes:
+          requires:
+            - checkout
