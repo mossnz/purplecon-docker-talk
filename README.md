@@ -46,7 +46,7 @@ There's a Docker Image pushed up into quay.io
 
 And a vulnerability scanning report of 
 
-https://quay.io/repository/mossnz/purplecon-limes/manifest/sha256:bcfcaef0062d1d85fc2c11c4766ee6de70629732c2dc3e1258b5d1dbd7cd0106?tab=vulnerabilities
+https://quay.io/repository/mossnz/purplecon-limes/manifest/sha256:86f73df6d48ffa61b957bff133c3faafc3e24b250e3dc681f1e56e0c26091e35?tab=vulnerabilities
 
 Which contains quite a few issues, because our image is straight up using `node:8` as a base. 
 
