@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  checkout: 
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/checkout
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: ~/checkout
+          paths: 
+            - app/
+            - docker-compose.yml
