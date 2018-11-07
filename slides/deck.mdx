@@ -24,6 +24,14 @@ containers are _processes_
 born from _tarballs_  
 anchored to _namespaces_  
 controlled by _cgroups_
+
+~~~notes
+This is from the talk "the containers operator's manual" which is great,
+
+"Containers are made up of a bunch of native Linux features stapled together"
+
+Rather than being magic boxes, containers are standing on the shoulders of giants to make up their abstractions.
+~~~
 ---
 ## It's abstractions all the way down
 
@@ -33,3 +41,39 @@ Today we'll be dealing with
 - docker build
 - docker run
 - docker-compose up
+
+---
+## All good code needs a good problem
+
+you have 1337 limes. definitely hax but ok.
+
+let's solve this by uploading the limes to the cloud.
+
+---
+## https://try.redis.io
+
+~~~
+> incr limes
+(integer) 1
+> incr limes
+(integer) 2
+~~~
+---
+## https://hub.docker.com/_/redis/
+### $ docker run --name some-redis -d redis:latest
+~~~
+aa83e03d773a559f8a020e8d0b8068b797551f58060bb2a77476bb559e51b5ae
+~~~
+### $ docker run -it --link some-redis:redis --rm redis redis-cli -h redis -p 6379
+~~~
+redis:6379> incr limes
+(integer) 1
+redis:6379> incr limes
+(integer) 2
+~~~
+---
+## Reflections on Trusting Trust
+To what extent should one trust a statement that a program is free of Trojan horses? Perhaps it is more important to trust the people who wrote the software.
+
+-- Ken Thompson. 1984. (Turing Award Lecture)
+---
