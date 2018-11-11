@@ -12,12 +12,11 @@ export { book as theme } from 'mdx-deck/themes'
 
 ---
 import { Split } from 'mdx-deck/layouts'
-import { Appear } from 'mdx-deck'
 
 export default Split
 
 ![](dog_splash.webp)
-## A brief introduction to containers
+## h*ck yeah containers
 
 [@alicegoldfuss](https://twitter.com/alicegoldfuss) says that  
 containers are _processes_  
@@ -33,7 +32,7 @@ This is from the talk "the containers operator's manual" which is great,
 Rather than being magic boxes, containers are standing on the shoulders of giants to make up their abstractions.
 ~~~
 ---
-## It's abstractions all the way down
+## Abstractions are friends
 
 Today we'll be dealing with
 - docker pull
@@ -70,6 +69,40 @@ redis:6379> incr limes
 (integer) 1
 redis:6379> incr limes
 (integer) 2
+~~~
+---
+### $ node index.js
+~~~
+const express = require('express');
+const redis = require('redis');
+~~~
+---
+export default Split
+
+~~~
+express.put('/limes', (res) => {
+  redis.incr('limes', (reply) => {
+    const limes = reply || 0;
+    res.json({
+      limes,
+    });
+  });
+});
+~~~
+![](dog_pyramid.webp)
+---
+export default Split
+
+![](puppy_lime.gif)
+~~~
+GET /limes
+{limes: "0"}
+
+PUT /limes
+{limes: 1}
+
+POST /limes
+Cannot POST /limes/
 ~~~
 ---
 ## Reflections on Trusting Trust
