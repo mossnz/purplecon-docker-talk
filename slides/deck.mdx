@@ -12,7 +12,6 @@ export { book as theme } from 'mdx-deck/themes'
 
 ---
 import { Split } from 'mdx-deck/layouts'
-import { Appear } from 'mdx-deck'
 
 export default Split
 
@@ -70,6 +69,40 @@ redis:6379> incr limes
 (integer) 1
 redis:6379> incr limes
 (integer) 2
+~~~
+---
+### $ node index.js
+~~~
+const express = require('express');
+const redis = require('redis');
+~~~
+---
+export default Split
+
+~~~
+express.put('/limes', (res) => {
+  redis.incr('limes', (reply) => {
+    const limes = reply || 0;
+    res.json({
+      limes,
+    });
+  });
+});
+~~~
+![](dog_pyramid.webp)
+---
+export default Split
+
+![](puppy_lime.gif)
+~~~
+GET /limes
+{limes: "0"}
+
+PUT /limes
+{limes: 1}
+
+POST /limes
+Cannot POST /limes/
 ~~~
 ---
 ## Reflections on Trusting Trust
