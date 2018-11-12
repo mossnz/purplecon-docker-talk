@@ -67,6 +67,13 @@ let's solve this by uploading the limes to the cloud.
 > incr limes
 (integer) 2
 ~~~
+
+~~~notes
+When I was submitting this talk, I pulled a container name out of thin air. Redis, I said.
+Since a lot of people put redis in a container. It's the fourth most popular image on Docker Hub.
+
+Then it turns out that redis solves the problem I came up with.
+~~~
 ---
 ## https://hub.docker.com/_/redis/
 ### $ docker run --name some-redis -d redis:latest
@@ -86,6 +93,10 @@ redis:6379> incr limes
 const express = require('express');
 const redis = require('redis');
 ~~~
+
+~~~notes
+Reaching for my most comfortable tooling.
+~~~
 ---
 export default Split
 
@@ -100,6 +111,10 @@ express.put('/limes', (res) => {
 });
 ~~~
 ![](dog_pyramid.webp)
+
+~~~notes
+And then we write a callback pyramid because Javascript
+~~~
 ---
 export default Split
 
