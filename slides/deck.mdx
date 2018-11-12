@@ -25,7 +25,7 @@ anchored to _namespaces_
 controlled by _cgroups_
 
 ~~~notes
-This is from the talk "the containers operator's manual" by Alice Goldfuss,
+Alice Goldfuss has a talk called "the containers operator's manual",
 
 "Containers are made up of a bunch of native Linux features stapled together"
 
@@ -45,7 +45,6 @@ Today we'll be dealing with
 - docker-compose up
 
 ~~~notes
-Abstractions help us focus on one part of an overall system at a time.
 We still want to learn about what "shoulders of giants" we're standing on,
 But we can start working _now_ and get to that as we continue learning
 
@@ -69,8 +68,7 @@ let's solve this by uploading the limes to the cloud.
 ~~~
 
 ~~~notes
-When I was submitting this talk, I pulled a container name out of thin air. Redis, I said.
-Since a lot of people put redis in a container. It's the fourth most popular image on Docker Hub.
+When I was submitting this talk, I pulled a service you can containerise out of thin air. Redis, I said.
 
 Then it turns out that redis solves the problem I came up with.
 ~~~
@@ -100,7 +98,7 @@ Reaching for my most comfortable tooling.
 ---
 export default Split
 
-~~~
+~~~javascript
 express.put('/limes', (res) => {
   redis.incr('limes', (reply) => {
     const limes = reply || 0;
@@ -114,6 +112,8 @@ express.put('/limes', (res) => {
 
 ~~~notes
 And then we write a callback pyramid because Javascript
+
+If there's no reply from redis, just say we have no limes.
 ~~~
 ---
 export default Split
@@ -135,7 +135,7 @@ import { Image } from 'mdx-deck'
 <Image src='how_to_draw_an_owl.jpg' size='contain' />
 
 ~~~notes
-Now that we have two containers, ie, minimally viable limes, it's time to draw the rest of the owl.
+Now that we have minimally viable limes, it's time to draw the rest of the owl.
 
 aka, Let's push this to _production_
 
@@ -146,4 +146,47 @@ But first, a history lesson on computing.
 To what extent should one trust a statement that a program is free of Trojan horses? Perhaps it is more important to trust the people who wrote the software.
 
 — Ken Thompson. 1984. (Turing Award Lecture)
+---
+## 1. Programs can write programs.
+
+~~~notes
+A "quine", a program which outputs itself.
+~~~
+---
+## 2. The C compiler is written in C
+
+~~~notes
+Compilers are programs that write programs.
+
+Including, the compilers themselves.
+~~~
+---
+## 3. We can modify a compiler to deliberately alter programs
+
+The actual bug I planted in the compiler would
+match code in the UNIX "login" command. The replacement
+code would miscompile the login command
+so that it would accept a particular known password.
+---
+
+## 3. We can modify a compiler to deliberately alter programs 
+
+... including the compiler. 
+
+~~~notes
+Inception noise.
+
+At this point, rather than just have a malicious compiler for login,
+
+We write a malicious compiler for the _compiler_, so if you compile a compiler it will 
+miscompile the UNIX "login" command
+~~~
+---
+## The moral of the story is you can't trust code you didn't build yourself.
+
+~~~notes
+And public docker containers are definitely code we didn't build ourselves.
+
+But what if we _could_ build them? Without having to stop our minimally viable product and draw the entire owl.
+~~~
 ---
