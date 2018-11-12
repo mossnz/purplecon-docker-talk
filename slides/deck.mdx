@@ -4,7 +4,7 @@ import { Head } from 'mdx-deck'
 export { book as theme } from 'mdx-deck/themes'
 
 <Head>
-  <title>purplecon</title>
+  <title>limes for purplecon</title>
 </Head>
 
 # Do you know what your containers are made of?
@@ -44,6 +44,13 @@ Today we'll be dealing with
 - docker run
 - docker-compose up
 
+~~~notes
+Abstractions help us focus on one part of an overall system at a time.
+We still want to learn about what "shoulders of giants" we're standing on,
+But we can start working _now_ and get to that as we continue learning
+
+You definitely want to know your abstractions when you're operating software.
+~~~
 ---
 ## All good code needs a good problem
 
@@ -108,8 +115,20 @@ POST /limes
 Cannot POST /limes/
 ~~~
 ---
+import { Image } from 'mdx-deck'
+
+<Image src='how_to_draw_an_owl.jpg' size='contain' />
+
+~~~notes
+Now that we have two containers, ie, minimally viable limes, it's time to draw the rest of the owl.
+
+aka, Let's push this to _production_
+
+But first, a history lesson on computing.
+~~~
+---
 ## Reflections on Trusting Trust
 To what extent should one trust a statement that a program is free of Trojan horses? Perhaps it is more important to trust the people who wrote the software.
 
--- Ken Thompson. 1984. (Turing Award Lecture)
+— Ken Thompson. 1984. (Turing Award Lecture)
 ---
