@@ -19,6 +19,7 @@ jobs:
             - app/
             - docker-compose.yml
             - tag
+ 
   build-limes:
     docker:
       - image: circleci/node:8.11-stretch
@@ -37,6 +38,107 @@ jobs:
           root: ~/project
           paths:
             - limes.tar
+
+  build-redis:
+    docker: 
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    environment:
+      REDIS_TAG: stage5
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build Redis
+          command: |
+            docker build -t quay.io/mossnz/purplecon-redis:$REDIS_TAG app/services/redis/.
+            docker save -o redis.tar quay.io/mossnz/purplecon-redis:$REDIS_TAG
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - redis.tar
+
+  diff-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    environment:
+      DIFF_VERSION: "v0.13.1"
+      REMOTE_REDIS: "redis:latest"
+    working_directory: /tmp/docker
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run: 
+          name: Install container-diff
+          command: |
+            echo $DIFF_VERSION
+            curl -LO https://storage.googleapis.com/container-diff/$DIFF_VERSION/container-diff-linux-amd64 
+            chmod +x container-diff-linux-amd64 
+            mkdir -p ~/bin 
+            mv container-diff-linux-amd64 ~/bin/container-diff
+      - run: 
+          name: Container Diff
+          command: |
+            ~/bin/container-diff diff ~/project/redis.tar remote://$REMOTE_REDIS --type=file
+
+  inspec-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    environment:
+        REDIS_TAG: stage5
+        INSPEC_VERSION: 3.0.48
+    working_directory: ~/project
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Load Redis Container
+          command: |
+            docker load -i redis.tar
+      - run: 
+          name: Run Redis Container
+          command: |
+            docker run -dt --name redis quay.io/mossnz/purplecon-redis:$REDIS_TAG
+      - run:
+          name: Inspec Redis Container
+          command: |
+            docker create -v /share --name share_profile chef/inspec:$INSPEC_VERSION
+            docker cp ~/project/app/services/redis/test share_profile:/share/profile
+            INSPEC_COMMAND="exec profile --no-color --reporter cli junit:/tmp/inspec/junit.xml -t docker://redis"
+            docker run -v /var/run/docker.sock:/var/run/docker.sock --volumes-from share_profile --name run_profile -it chef/inspec:$INSPEC_VERSION $INSPEC_COMMAND
+      - run:
+          name: Gather Inspec Results
+          when: always
+          command: |
+            mkdir /tmp/output
+            docker cp run_profile:/tmp/inspec /tmp/output/inspec
+      - store_test_results:
+          path: /tmp/output/
+
+
+  push-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    environment:
+      REDIS_TAG: stage5
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run: 
+          name: Load Redis Container
+          command: |
+            docker load -i redis.tar
+      - run: 
+          name: Push to Quay.io
+          command: |
+            echo $QUAY_PWD | docker login -u="mossnz+circleci" --password-stdin quay.io
+            docker push quay.io/mossnz/purplecon-redis:$REDIS_TAG
+
   push-limes:
     docker:
       - image: circleci/node:8.11-stretch
@@ -65,6 +167,22 @@ workflows:
       - build-limes:
           requires:
             - checkout
+      - build-redis:
+          requires:
+            - checkout
+      - diff-redis:
+          requires:
+            - build-redis
+      - inspec-redis:
+          requires:
+            - build-redis
+      - approve-redis:
+          type: approval
+          requires:
+            - build-redis
+      - push-redis:
+          requires:
+            - approve-redis
       - approve-limes:
           type: approval
           requires:
