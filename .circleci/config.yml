@@ -113,6 +113,7 @@ jobs:
           name: Gather Inspec Results
           when: always
           command: |
+            mkdir /tmp/output
             docker cp run_profile:/tmp/inspec /tmp/output/inspec
       - store_test_results:
           path: /tmp/output/
