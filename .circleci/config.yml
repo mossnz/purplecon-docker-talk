@@ -96,7 +96,7 @@ jobs:
       - run: 
           name: Load Limes App
           command: |
-            docker load -i redus.tar
+            docker load -i redis.tar
       - run: 
           name: Push to Quay.io
           command: |
