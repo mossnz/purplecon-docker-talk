@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
  app:
-  image: lime:local
+  image: quay.io/mossnz/purplecon-limes:stage5
   hostname: limesapp
   container_name: limes_app
   ports:
@@ -13,7 +13,7 @@ services:
     - redis
 
  redis:
-  image: redis:latest
+  image: quay.io/mossnz/purplecon-redis:stage5
   hostname: limesredis
   container_name: limes_redis
   
