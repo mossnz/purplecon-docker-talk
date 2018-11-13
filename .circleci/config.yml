@@ -59,6 +59,29 @@ jobs:
           paths:
             - redis.tar
 
+  check-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    environment:
+      DIFF_VERSION: "v0.13.1"
+    working_directory: /tmp/docker
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run: 
+          name: Install container-diff
+          command: |
+            echo $DIFF_VERSION
+            curl -LO https://storage.googleapis.com/container-diff/$DIFF_VERSION/container-diff-linux-amd64 
+            chmod +x container-diff-linux-amd64 
+            mkdir -p ~/bin 
+            mv container-diff-linux-amd64 ~/bin/container-diff
+      - run: 
+          name: Container Diff
+          command: |
+            ~/bin/container-diff redis.tar remote://redis:latest
+
   push-limes:
     docker:
       - image: circleci/node:8.11-stretch
