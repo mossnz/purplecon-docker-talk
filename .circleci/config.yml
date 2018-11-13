@@ -64,6 +64,7 @@ jobs:
       - image: circleci/node:8.11-stretch
     environment:
       DIFF_VERSION: "v0.13.1"
+      REMOTE_REDIS: "redis:latest"
     working_directory: /tmp/docker
     steps:
       - setup_remote_docker
@@ -80,7 +81,27 @@ jobs:
       - run: 
           name: Container Diff
           command: |
-            ~/bin/container-diff diff ~/project/redis.tar remote://redis:latest --type=file
+            ~/bin/container-diff diff ~/project/redis.tar remote://$REMOTE_REDIS --type=file
+
+  push-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    environment:
+      REDIS_TAG: stage5
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run: 
+          name: Load Limes App
+          command: |
+            docker load -i redus.tar
+      - run: 
+          name: Push to Quay.io
+          command: |
+            echo $QUAY_PWD | docker login -u="mossnz+circleci" --password-stdin quay.io
+            docker push quay.io/mossnz/purplecon-redis:$REDIS_TAG
 
   push-limes:
     docker:
@@ -116,6 +137,13 @@ workflows:
       - check-redis:
           requires:
             - build-redis
+      - approve-redis:
+          type: approval
+          requires:
+            - build-redis
+      - push-redis:
+          requires:
+            - approve-redis
       - approve-limes:
           type: approval
           requires:
