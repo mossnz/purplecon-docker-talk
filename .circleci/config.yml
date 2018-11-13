@@ -80,7 +80,7 @@ jobs:
       - run: 
           name: Container Diff
           command: |
-            ~/bin/container-diff diff redis.tar remote://redis:latest --type=file
+            ~/bin/container-diff diff ~/project/redis.tar remote://redis:latest --type=file
 
   push-limes:
     docker:
