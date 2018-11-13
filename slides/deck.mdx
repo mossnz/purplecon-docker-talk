@@ -214,11 +214,37 @@ We write a malicious compiler for the _compiler_, so if you compile a compiler i
 miscompile the UNIX "login" command
 ~~~
 ---
-## The moral of the story is you can't trust code you didn't build yourself.
+## The moral of this story is you can't trust code you didn't build yourself.
 
 ~~~notes
 And public docker containers are definitely code we didn't build ourselves.
 
-But what if we _could_ build them? Without having to stop our minimally viable product and draw the entire owl.
+The typical security advice is to _not_ use public containers.
+
+Which means if you've got a minimally viable product using public containers, you must then stop and rebuild them from scratch...
 ~~~
 ---
+ If you wish to make an apple pie from scratch, you must first invent the universe. 
+
+ — Carl Sagan. Cosmos.
+
+~~~notes
+And we really don't want to invent the entire universe
+
+So, what can we do to progressively build up trust in containers, 
+While not stopping the world to rebuild from scratch?
+~~~
+---
+export default Split
+
+![](dog_sneak.webp)
+
+## Minimally Viable Pipeline
+
+By introducing a CI Pipeline, we can make small steps towards trusting our containers
+
+~~~notes
+Very Important to pause and watch the dogs. 
+~~~
+---
+
