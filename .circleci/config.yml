@@ -19,6 +19,7 @@ jobs:
             - app/
             - docker-compose.yml
             - tag
+ 
   build-limes:
     docker:
       - image: circleci/node:8.11-stretch
@@ -37,6 +38,27 @@ jobs:
           root: ~/project
           paths:
             - limes.tar
+
+  build-redis:
+    docker: 
+      - image: circleci/node:8.11-stretch
+    working_directory: ~/project
+    environment:
+      REDIS_TAG: stage5
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Build Redis
+          command: |
+            docker build -t quay.io/mossnz/purplecon-redis:$REDIS_TAG app/services/redis/.
+            docker save -o redis.tar quay.io/mossnz/purplecon-redis:$REDIS_TAG
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - redis.tar
+
   push-limes:
     docker:
       - image: circleci/node:8.11-stretch
@@ -63,6 +85,9 @@ workflows:
     jobs:
       - checkout
       - build-limes:
+          requires:
+            - checkout
+      - build-redis:
           requires:
             - checkout
       - approve-limes:
