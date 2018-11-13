@@ -113,6 +113,9 @@ workflows:
       - build-redis:
           requires:
             - checkout
+      - check-redis:
+          requires:
+            - build-redis
       - approve-limes:
           type: approval
           requires:
