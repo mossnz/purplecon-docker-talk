@@ -59,7 +59,7 @@ jobs:
           paths:
             - redis.tar
 
-  check-redis:
+  diff-redis:
     docker:
       - image: circleci/node:8.11-stretch
     environment:
@@ -83,6 +83,41 @@ jobs:
           command: |
             ~/bin/container-diff diff ~/project/redis.tar remote://$REMOTE_REDIS --type=file
 
+  inspec-redis:
+    docker:
+      - image: circleci/node:8.11-stretch
+    environment:
+        REDIS_TAG: stage5
+        INSPEC_VERSION: 3.0.48
+    working_directory: ~/project
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Load Redis Container
+          command: |
+            docker load -i redis.tar
+      - run: 
+          name: Run Redis Container
+          command: |
+            docker run -dt -name:redis quay.io/mossnz/purplecon-redis:REDIS_TAG
+      - run:
+          name: Inspec Redis Container
+          command: |
+            docker create -v /share --name share_profile chef/inspec:$INSPEC_VERSION
+            docker cp ~/project/app/services/redis/test share_profile:/share/profile
+            INSPEC_COMMAND="exec profile --no-color --reporter cli junit:/tmp/inspec/junit.xml -t docker://redis"
+            docker run -v /var/run/docker.sock:/var/run/docker.sock --volumes-from share_profile --name run_profile -it chef/inspec:$INSPEC_VERSION $INSPEC_COMMAND
+      - run:
+          name: Gather Inspec Results
+          when: always
+          command: |
+            docker cp run_profile:/tmp/inspec /tmp/output/inspec
+      - store_test_results:
+          path: /tmp/output/
+
+
   push-redis:
     docker:
       - image: circleci/node:8.11-stretch
@@ -94,7 +129,7 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run: 
-          name: Load Limes App
+          name: Load Redis Container
           command: |
             docker load -i redis.tar
       - run: 
@@ -134,7 +169,10 @@ workflows:
       - build-redis:
           requires:
             - checkout
-      - check-redis:
+      - diff-redis:
+          requires:
+            - build-redis
+      - inspec-redis:
           requires:
             - build-redis
       - approve-redis:
