@@ -101,7 +101,7 @@ jobs:
       - run: 
           name: Run Redis Container
           command: |
-            docker run -dt -name:redis quay.io/mossnz/purplecon-redis:REDIS_TAG
+            docker run -dt --name:redis quay.io/mossnz/purplecon-redis:REDIS_TAG
       - run:
           name: Inspec Redis Container
           command: |
