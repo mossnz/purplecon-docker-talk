@@ -265,13 +265,15 @@ The simplest docker file
 
 After we build an image, we can gain trust by running
 
-- **container-diff**, a Google open source tooling
-- **inspec**, a Compliance as Code tooling
+- **container-diff**, a Google open source tool
+- **inspec**, Compliance as Code tooling
 - **anchore** or **clair**, vulnerability scanners for Docker
 ---
+<Image src='circleci.com_workflow-run_c32dcf6d-bff6-49bd-950f-a3e5b2ce946e.png' size='contain'/>
+---
 ### https://github.com/GoogleContainerTools/container-diff
-### $ container-diff diff redis.tar remote://mossnz/purple-redis:production 
-### --type=file
+### $ container-diff diff redis.tar remote://mossnz/
+### purple-redis:production --type=file
 ~~~
 These entries have been added to /redis.tar: None
 
@@ -294,6 +296,8 @@ end
 Test Summary: 1 successful, 0 failures, 0 skipped
 ~~~
 ---
+<Image src='quay.io_repository_mossnz_purplecon-redis_manifest_sha256_e8ca43ad4739378498c5123cd11a06df1d1f547c9f82a110b50dff205917130c_tab=vulnerabilities.png' size="contain" />
+---
 ## :latest is not your friend
 
 The **:latest** tag isn't what it seems. 
@@ -308,3 +312,62 @@ Which breaks people's expectations and environments if you rely on it.
 + FROM redis:5.0.1-alpine3.8
 ~~~
 ---
+### $ container-diff diff redis.tar remote://mossnz/
+### purple-redis:production --type=file
+~~~
+These entries have been added to redis.tar: None
+
+These entries have been deleted from redis.tar:
+FILE
+/bin                                                                            
+/bin/arch
+/bin/base64
+/bin/busybox
+...
+~~~
+---
+### $ inspec exec test -t docker://purple-redis
+~~~
+  Command: `redis-cli ping`
+     ✔  stdout should match /PONG/
+
+Test Summary: 1 successful, 0 failures, 0 skipped
+~~~
+---
+<Image src='quay.io_repository_mossnz_purplecon-redis_tab=tags.png' size="contain" />
+---
+# docker-compose.yml
+~~~
+services:
+ app:
+  image:          quay.io/mossnz/purplecon-limes:stage6
+  container_name: limes_app
+  depends_on:
+    - redis
+
+ redis:
+  image:          quay.io/mossnz/purplecon-redis:stage6
+  container_name: limes_redis
+~~~
+---
+export default Split
+
+![](containers_on_a_journey.webp)
+
+from **redis:latest**
+
+to **mossnz/purplecon-redis:stage6**
+- Diffing
+- Compliance as Code
+- Vulnerability Scanning
+
+#### https://github.com/mossnz/purplecon-docker
+
+~~~notes
+Thank you for coming on this journey with me,
+Where we have gone from a public Docker container,
+to a build pipeline that gives us more trust without rebuilding the universe from scratch,
+And allows us to continue that work if we want to and build our own containers.
+
+I have been moss, please be whimsical.
+~~~
