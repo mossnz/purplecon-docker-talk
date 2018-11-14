@@ -64,7 +64,7 @@ jobs:
       - image: circleci/node:8.11-stretch
     environment:
       DIFF_VERSION: "v0.13.1"
-      REMOTE_REDIS: "quay.io/mossnz/purplecon-redis"
+      REMOTE_REDIS: "quay.io/mossnz/purplecon-redis:stage5"
     working_directory: /tmp/docker
     steps:
       - setup_remote_docker
