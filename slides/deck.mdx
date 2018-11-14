@@ -58,7 +58,7 @@ you have 1337 limes. definitely hax but ok.
 let's solve this by uploading the limes to the cloud.
 
 ---
-## https://try.redis.io
+### https://try.redis.io
 
 ~~~
 > incr limes
@@ -73,7 +73,7 @@ When I was submitting this talk, I pulled a service you can containerise out of 
 Then it turns out that redis solves the problem I came up with.
 ~~~
 ---
-## https://hub.docker.com/_/redis/
+### https://hub.docker.com/_/redis/
 ### $ docker run --name some-redis -d redis:latest
 ~~~
 aa83e03d773a559f8a020e8d0b8068b797551f58060bb2a77476bb559e51b5ae
@@ -264,7 +264,7 @@ After we build an image, we can gain trust by running
 - **container-diff**, a Google open source tooling
 - **inspec**, a Compliance as Code tooling
 ---
-## https://github.com/GoogleContainerTools/container-diff
+### https://github.com/GoogleContainerTools/container-diff
 ### $ container-diff diff redis.tar remote://mossnz/purple-redis:production 
 ### --type=file
 ~~~
@@ -275,7 +275,7 @@ These entries have been deleted from /redis.tar: None
 These entries have been changed between /redis.tar and purple-redis: None
 ~~~
 ---
-## https://www.inspec.io/
+### https://www.inspec.io/
 ~~~
 describe command('redis-cli ping') do
     its(:stdout) { should match(/PONG/) }
@@ -288,4 +288,16 @@ end
 
 Test Summary: 1 successful, 0 failures, 0 skipped
 ~~~
+---
+## :latest is not your friends
+
+The **:latest** tag isn't what it seems. 
+
+The **:latest** tag is applied to any build that doesn't have a tag.
+
+Which breaks people's expectations and environments if you rely on it.
+---
+## Dockerfile
+~~~
+FROM redis:5.0.1-alpine3.8
 ---
