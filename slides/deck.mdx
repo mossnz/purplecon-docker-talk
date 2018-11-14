@@ -247,4 +247,45 @@ By introducing a CI Pipeline, we can make small steps towards trusting our conta
 Very Important to pause and watch the dogs. 
 ~~~
 ---
+# Dockerfile
+~~~
+FROM redis:latest
+~~~
 
+~~~notes
+The simplest docker file
+---
+## $ docker build -t purplecon-redis:production app/services/redis/.
+---
+## CI Pipeline
+
+After we build an image, we can gain trust by running
+
+- **container-diff**, a Google open source tooling
+- **inspec**, a Compliance as Code tooling
+---
+## https://github.com/GoogleContainerTools/container-diff
+### $ container-diff diff redis.tar remote://mossnz/purple-redis:production 
+### --type=file
+~~~
+These entries have been added to /redis.tar: None
+
+These entries have been deleted from /redis.tar: None
+
+These entries have been changed between /redis.tar and purple-redis: None
+~~~
+---
+## https://www.inspec.io/
+~~~
+describe command('redis-cli ping') do
+    its(:stdout) { should match(/PONG/) }
+end
+~~~
+### $ inspec exec test -t docker://purple-redis
+~~~
+  Command: `redis-cli ping`
+     ✔  stdout should match /PONG/
+
+Test Summary: 1 successful, 0 failures, 0 skipped
+~~~
+---
