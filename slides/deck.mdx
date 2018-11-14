@@ -147,6 +147,10 @@ COPY . .
 EXPOSE 1337
 CMD ["node", "index.js"]
 ~~~
+
+~~~notes
+This is from googling for "Docker Node App"
+~~~
 ---
 # docker-compose.yml
 ~~~
@@ -263,6 +267,7 @@ After we build an image, we can gain trust by running
 
 - **container-diff**, a Google open source tooling
 - **inspec**, a Compliance as Code tooling
+- **anchore** or **clair**, vulnerability scanners for Docker
 ---
 ### https://github.com/GoogleContainerTools/container-diff
 ### $ container-diff diff redis.tar remote://mossnz/purple-redis:production 
@@ -289,15 +294,17 @@ end
 Test Summary: 1 successful, 0 failures, 0 skipped
 ~~~
 ---
-## :latest is not your friends
+## :latest is not your friend
 
 The **:latest** tag isn't what it seems. 
 
-The **:latest** tag is applied to any build that doesn't have a tag.
+The **:latest** tag is applied to any build that _doesn't_ have a tag.
 
 Which breaks people's expectations and environments if you rely on it.
 ---
 ## Dockerfile
 ~~~
-FROM redis:5.0.1-alpine3.8
+- FROM redis:latest
++ FROM redis:5.0.1-alpine3.8
+~~~
 ---
