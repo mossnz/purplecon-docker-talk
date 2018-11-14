@@ -44,7 +44,7 @@ jobs:
       - image: circleci/node:8.11-stretch
     working_directory: ~/project
     environment:
-      REDIS_TAG: stage5
+      REDIS_TAG: stage6
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -64,7 +64,7 @@ jobs:
       - image: circleci/node:8.11-stretch
     environment:
       DIFF_VERSION: "v0.13.1"
-      REMOTE_REDIS: "redis:latest"
+      REMOTE_REDIS: "quay.io/mossnz/purplecon-redis"
     working_directory: /tmp/docker
     steps:
       - setup_remote_docker
@@ -87,7 +87,7 @@ jobs:
     docker:
       - image: circleci/node:8.11-stretch
     environment:
-        REDIS_TAG: stage5
+        REDIS_TAG: stage6
         INSPEC_VERSION: 3.0.48
     working_directory: ~/project
     steps:
@@ -124,7 +124,7 @@ jobs:
       - image: circleci/node:8.11-stretch
     working_directory: ~/project
     environment:
-      REDIS_TAG: stage5
+      REDIS_TAG: stage6
     steps:
       - setup_remote_docker
       - attach_workspace:
